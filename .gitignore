@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv
+env/
+venv/
+
+# 日志和临时文件
+*.log
+*.out
+*.pid
+logs/
+
+# 数据库（不上传本地数据库，云端会自动创建）
+# *.db
+
+# IDE
+.vscode/
+.idea/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 测试文件
+test_*.py
+*_test.py
+deep_verify*.txt
+final_verify*.txt
+
+# 禁用的文件
+*.disabled

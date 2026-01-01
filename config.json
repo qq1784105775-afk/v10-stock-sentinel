@@ -1,0 +1,52 @@
+{
+    "tushare_token": "5a4143dbe7341860c5220205b4ec8ad802bce0d21a99ef2bcdb872a9",
+    "database_path": "v8_data.db",
+    "cache_expire_hours": 16,
+    "server": {
+        "host": "0.0.0.0",
+        "port": 9000
+    },
+    "scoring_weights": {
+        "trend": 0.4,
+        "volume": 0.25,
+        "position": 0.2,
+        "market_sync": 0.1,
+        "theme_heat": 0.05
+    },
+    "alert_rules": {
+        "thunder_scan": {
+            "min_rise_pct": 4.0,
+            "min_main_inflow": 30000000,
+            "check_minutes": 15,
+            "beep_count": 5
+        },
+        "tail_guard": {
+            "min_fall_pct": 3.0,
+            "check_last_minutes": 10,
+            "beep_count": 8
+        }
+    },
+    "fake_drop_rules": {
+        "min_fall_pct": 5.0,
+        "min_consecutive_days": 2
+    },
+    "main_force_rules": {
+        "min_consecutive_days": 2,
+        "single_day_threshold": 10000000
+    },
+    "position_rules": {
+        "low_position_multiplier": 1.1
+    },
+    "wechat_config": {
+        "push_token": "5c315738bc1b4c73aca77ff37d3039a5",
+        "enabled": true,
+        "push_times": ["09:25", "10:00", "11:00", "14:00", "14:50"],
+        "push_types": {
+            "limit_up": true,
+            "limit_down": true,
+            "position_alert": true,
+            "auction_signal": true,
+            "market_signal": true
+        }
+    }
+}

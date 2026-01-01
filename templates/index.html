@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>V9 Ultra Pro Institutional</title>
+    <style>
+        /* --- 全局 --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, "PingFang SC", sans-serif;
+            background: #0b101a;
+            color: #cdd6e0;
+            padding-bottom: 100px;
+        }
+
+        :root {
+            --red: #ff4d4d;
+            --green: #00ff88;
+            --blue: #00ffff;
+            --gold: #ffd700;
+            --card: #151a25;
+            --border: rgba(255, 255, 255, 0.1);
+            --purple: #a855f7;
+        }
+
+        .up {
+            color: var(--red)
+        }
+
+        .down {
+            color: var(--green)
+        }
+
+        /* --- V9徽章 --- */
+        .v9-badge {
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            color: #fff;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        /* --- 顶部 --- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(11, 16, 26, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 900;
+            font-style: italic;
+            background: linear-gradient(90deg, var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            margin-top: 60px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* --- 信息条 --- */
+        .info-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .info-pill {
+            background: #1c2230;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #889;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .info-val {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* --- 按钮 & 搜索 --- */
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .btn-pick {
+            flex: 1;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-sentinel {
+            flex: 1;
+            background: #1c2230;
+            border: 1px solid #445;
+            color: #ccc;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .sentinel-active {
+            background: linear-gradient(135deg, #ef4444, #b91c1c) !important;
+            color: white !important;
+            border: none !important;
+            animation: breathe 2s infinite;
+        }
+
+        @keyframes breathe {
+            0% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.8
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            background: #1c2230;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-res {
+            display: none;
+            background: #252b3b;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            z-index: 90;
+            border-radius: 8px;
+            border: 1px solid #445;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .res-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- 资产 & 列表 --- */
+        .asset-card {
+            background: linear-gradient(135deg, #1a2332, #0d1218);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .asset-val {
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            margin: 8px 0;
+            letter-spacing: 1px;
+        }
+
+        .asset-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #889;
+        }
+
+        .sec-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--blue);
+            border-left: 3px solid var(--blue);
+            padding-left: 8px;
+            margin-bottom: 8px;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid transparent;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .c-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #eee;
+        }
+
+        .c-code {
+            font-size: 12px;
+            color: #667;
+        }
+
+        .c-price {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .pos-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border);
+            color: #889;
+        }
+
+        /* --- 核心弹窗 (左右结构) --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .m-win {
+            width: 90%;
+            max-width: 400px;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: #1c2230;
+            border-radius: 16px;
+            border: 1px solid #334;
+            animation: pop 0.3s;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.95);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        /* 头部 */
+        .m-head-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .mh-left {
+            flex: 1;
+        }
+
+        .mh-name {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mh-code {
+            font-size: 12px;
+            color: #667;
+            margin-top: 2px;
+            font-family: monospace;
+        }
+
+        .mh-right {
+            text-align: right;
+            margin-right: 30px;
+        }
+
+        .mh-price {
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1;
+            letter-spacing: 1px;
+        }
+
+        .mh-pct {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .m-close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .m-body {
+            padding: 20px;
+        }
+
+        /* 组件 */
+        .sig-bar {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2c3240;
+        }
+
+        .sig-text {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .score-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chip-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 215, 0, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .chip-col {
+            text-align: center;
+            flex: 1;
+        }
+
+        .chip-lbl {
+            color: var(--gold);
+            font-size: 10px;
+            display: block;
+            margin-bottom: 2px;
+            opacity: 0.8;
+        }
+
+        .chip-val {
+            color: var(--gold);
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .human {
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 3px solid var(--blue);
+            padding: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ddd;
+            margin-bottom: 10px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        /* 战术条 (单行) */
+        .t-mini-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+        }
+
+        .t-mini-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .t-mini-val {
+            font-weight: bold;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .val-red {
+            color: var(--red);
+        }
+
+        .val-gold {
+            color: var(--gold);
+        }
+
+        /* 底部数据 */
+        .d-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #667;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+
+        .risk-radar {
+            background: #151922;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 11px;
+            color: #889;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .b-back {
+            background: #334;
+            color: #ccc;
+            border: 1px solid #556;
+        }
+
+        .b-buy {
+            background: var(--red);
+        }
+
+        .b-sell {
+            background: var(--green);
+            color: #000;
+        }
+
+        .t-inp {
+            width: 100%;
+            background: #0b101a;
+            border: 1px solid #445;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        /* 交割单 */
+        .trd-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 5px;
+        }
+
+        .trd-item {
+            background: #151922;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .trd-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .trd-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 80px;
+        }
+
+        .trd-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trd-time {
+            font-size: 11px;
+            color: #667;
+            margin-top: 3px;
+            font-family: monospace;
+        }
+
+        .trd-price {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 3px;
+        }
+
+        .trd-pnl {
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .tag-buy {
+            background: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+            border: 1px solid #ff3b30;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+
+        .tag-sell {
+            background: rgba(0, 230, 118, 0.2);
+            color: #00e676;
+            border: 1px solid #00e676;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 10px;
+        }
+
+        /* 颜色类 */
+        .bg-go {
+            background: linear-gradient(135deg, #ff3333, #ff6600) !important;
+        }
+
+        .bg-run {
+            background: linear-gradient(135deg, #00cc66, #00ff99) !important;
+        }
+
+        .bg-fake {
+            background: linear-gradient(135deg, #ffd700, #ffaa00) !important;
+            color: #000 !important;
+        }
+
+        .bg-watch {
+            background: #334 !important;
+            border: 1px solid #556 !important;
+        }
+
+        .lhb-tag {
+            background: linear-gradient(135deg, #ff00cc, #333399);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 10px;
+            color: #fff;
+            margin-left: 4px;
+        }
+
+        .tag-golden {
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .tag-main {
+            background: linear-gradient(90deg, #FF416C, #FF4B2B);
+            color: #fff;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .tag-rebound {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: #fff;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        /* 实时资金流展示 */
+        .realtime-fund {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .rf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rf-title {
+            color: var(--blue);
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rf-update {
+            font-size: 10px;
+            color: #667;
+        }
+
+        .rf-main {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .rf-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .rf-label {
+            font-size: 10px;
+            color: #889;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .rf-value {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .rf-signal {
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .rf-signal-in {
+            background: rgba(255, 77, 77, 0.15);
+            border: 1px solid var(--red);
+            color: var(--red);
+        }
+
+        .rf-signal-out {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid var(--green);
+            color: var(--green);
+        }
+
+        .rf-signal-neutral {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #445;
+            color: #aaa;
+        }
+
+        .rf-suggestion {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #aaa;
+            text-align: center;
+        }
+
+        /* 雷达球 */
+        .radar-ball {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #00ffff, #0099ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            z-index: 900;
+            animation: pulse 2s infinite;
+            display: none;
+        }
+
+        .radar-msg {
+            position: fixed;
+            top: 70px;
+            left: 5%;
+            width: 90%;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--red);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            z-index: 1500;
+            text-align: center;
+            display: none;
+        }
+
+        .btn-remove {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .btn-add-watch {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: 1px solid #667;
+            color: #667;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="logo">V15 ULTRA PRO</div>
+        <div style="font-size:12px; text-align:right;">
+            <div id="idxPt">---</div>
+            <div id="idxChg">--%</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="info-bar">
+            <div class="info-pill">🌏 北向 <span class="info-val" id="nVal">--</span></div>
+            <div class="info-pill">🔥 热点 <span class="info-val" id="hotSec">--</span></div>
+            <div class="info-pill" onclick="openReview()" style="background:var(--blue); color:#000; font-weight:bold;">
+                📅 复盘</div>
+            <div class="info-pill" onclick="openTrades()" style="background:#334; color:#ccc;">📜 交割</div>
+        </div>
+        <div class="action-row">
+            <button class="btn-pick" onclick="autoPick()"><span>⚡ AI 智能选股</span></button>
+            <div class="btn-sentinel" id="sentinelBox" onclick="toggleSentinel()"><span id="sentinelIcon">🔕</span>
+                <span id="sentinelText">哨兵关</span></div>
+        </div>
+        <div id="sentinelStatus" style="font-size:10px; color:var(--red); text-align:center; height:14px;"></div>
+        <div class="search-wrapper"><input type="text" class="search-box" id="sBox" placeholder="🔍 搜索股票">
+            <div class="search-res" id="sRes"></div>
+        </div>
+        <div class="asset-card">
+            <div class="asset-row"><span>总资产</span><span onclick="sync()" style="color:var(--blue)">🔄 同步</span></div>
+            <div class="asset-val" id="tVal">0.00</div>
+            <div class="asset-row"><span>浮动 <b id="tPnl" class="neu">+0.00</b></span><span>已落袋 <b
+                        id="rPnl">0.00</b></span></div>
+        </div>
+        <div>
+            <div class="sec-title">我的持仓</div>
+            <div id="posList"></div>
+        </div>
+        <div>
+            <div class="sec-title">自选观察</div>
+            <div id="watchList"></div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗 -->
+    <div class="modal" id="dMod">
+        <div class="m-win">
+            <div class="m-head-row">
+                <div class="mh-left">
+                    <div class="mh-name"><span id="dName">股票</span><span id="dLhb"></span><span id="dFina"></span></div>
+                    <div class="mh-code" id="dCode">000000</div>
+                </div>
+                <div class="mh-right">
+                    <div class="mh-price" id="dPrice">0.00</div>
+                    <div class="mh-pct" id="dPct">+0.00%</div>
+                </div>
+                <div class="m-close" onclick="closeM('dMod')">&times;</div>
+            </div>
+            <div class="m-body">
+                <div id="dSigBar" class="sig-bar"><span id="dAction" class="sig-text">分析中</span>
+                    <div class="score-circle" id="dScore">0</div>
+                </div>
+                <div class="chip-row">
+                    <div class="chip-col" style="border-right:1px solid rgba(255,215,0,0.3)"><span class="chip-lbl">💰
+                            获利盘比例</span><span class="chip-val" id="dWinRate">--</span></div>
+                    <div class="chip-col"><span class="chip-lbl">🛡️ 平均成本</span><span class="chip-val"
+                            id="dAvgCost">--</span></div>
+                </div>
+                <div class="human">
+                    <div style="color:var(--blue); font-weight:bold; margin-bottom:5px;">🤖 AI 直白分析</div>
+                    <div id="dHuman"></div>
+                </div>
+
+                <!-- 实时资金流展示区域 -->
+                <div class="realtime-fund" id="realtimeFundBox" style="display:none;">
+                    <div class="rf-header">
+                        <span class="rf-title">💹 盘中实时资金流</span>
+                        <span class="rf-update" id="rfUpdateTime">更新中...</span>
+                    </div>
+                    <div class="rf-main">
+                        <div class="rf-item">
+                            <span class="rf-label">主力净流入</span>
+                            <span class="rf-value" id="rfMainNet">--</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-label">买卖力量比</span>
+                            <span class="rf-value" id="rfPowerRatio">--</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-label">资金趋势</span>
+                            <span class="rf-value" id="rfTrend">--</span>
+                        </div>
+                    </div>
+                    <div class="rf-signal" id="rfSignal">数据加载中...</div>
+                    <div class="rf-suggestion" id="rfSuggestion"></div>
+                </div>
+
+                <div class="risk-radar"><span style="font-size:14px;">🛡️</span> <span id="dRiskRadar">风控扫描中...</span>
+                </div>
+                <div class="d-info-row"><span>主力: <b style="color:#fff" id="dMflow">0</b></span><span>警报: <b
+                            id="dAlert">无</b></span></div>
+                <div class="btns">
+                    <button class="btn b-back" onclick="backtest()">回测</button>
+                    <button class="btn b-buy" onclick="trade('BUY')">买入</button>
+                    <button class="btn b-sell" onclick="trade('SELL')">卖出</button>
+                </div>
+                <button id="btnWatch" class="btn-add-watch" onclick="toggleWatch()">+ 加入自选</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交易弹窗 -->
+    <div class="modal" id="tMod">
+        <div class="m-win" style="max-width:320px;">
+            <div class="m-head">
+                <div id="tTitle" style="font-weight:bold; color:#fff">交易</div>
+            </div>
+            <div class="m-body"><input type="hidden" id="tCode"><input type="hidden" id="tName"><input type="hidden"
+                    id="tDir">
+                <p style="font-size:12px; color:#889; margin-bottom:5px;">价格</p><input type="number" id="tPrice"
+                    class="t-inp">
+                <p style="font-size:12px; color:#889; margin-bottom:5px;">数量</p><input type="number" id="tQty"
+                    class="t-inp" placeholder="股数">
+                <div class="btns"><button class="btn" style="background:#334; color:#ccc"
+                        onclick="closeM('tMod')">取消</button><button class="btn"
+                        style="background:var(--blue); color:#000" onclick="subTrade()">确认</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="pickMod">
+        <div class="m-win">
+            <div class="m-head">
+                <div style="font-size:18px; font-weight:bold;">⚡ AI 精选池</div>
+                <div class="m-close" onclick="closeM('pickMod')">&times;</div>
+            </div>
+            <div class="m-body" id="pickList" style="min-height:100px; text-align:center; padding-top:30px;">正在扫描市场...
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="revMod">
+        <div class="m-win">
+            <div class="m-head">
+                <div style="font-size:18px; font-weight:bold;">AI 智能复盘</div>
+                <div class="m-close" onclick="closeM('revMod')">&times;</div>
+            </div>
+            <div class="m-body" id="revContent" style="line-height:1.6; color:#ddd; font-size:14px;">加载中...</div>
+        </div>
+    </div>
+    <div class="modal" id="trdListMod">
+        <div class="m-win">
+            <div class="m-head">
+                <div style="font-size:18px; font-weight:bold;">📜 历史交割单</div>
+                <div class="m-close" onclick="closeM('trdListMod')">&times;</div>
+            </div>
+            <div class="m-body" id="trdListContent" style="font-size:12px;">加载中...</div>
+        </div>
+    </div>
+    <div class="radar-ball" id="rBall" onclick="checkRadar(); alert('📡 雷达正在全市场扫描中...\n(盘中实时监控突发涨跌)')">📡</div>
+    <div class="radar-msg" id="rMsg"></div>
+
+    <script>
+        let cur = {}; let tmr = null;
+        let sentinelOn = false; let sentinelTimer = null; const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playAlarm() { if (audioCtx.state === 'suspended') audioCtx.resume(); const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type = 'square'; o.frequency.setValueAtTime(880, audioCtx.currentTime); o.frequency.setValueAtTime(440, audioCtx.currentTime + 0.1); g.gain.setValueAtTime(0.5, audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5); o.start(); o.stop(audioCtx.currentTime + 0.5); }
+        function toggleSentinel() { sentinelOn = !sentinelOn; const box = document.getElementById('sentinelBox'); const txt = document.getElementById('sentinelText'); if (sentinelOn) { box.className = 'btn-sentinel sentinel-active'; txt.innerText = '哨兵开'; document.getElementById('sentinelIcon').innerText = '📡'; checkSentinel(); sentinelTimer = setInterval(checkSentinel, 5000); } else { box.className = 'btn-sentinel'; txt.innerText = '哨兵关'; document.getElementById('sentinelIcon').innerText = '🔕'; clearInterval(sentinelTimer); } }
+        async function checkSentinel() { if (!sentinelOn) return; try { const res = await fetch('/api/monitor/check'); const d = await res.json(); if (d.alarm) { document.getElementById('sentinelStatus').innerText = d.message; if (navigator.vibrate) navigator.vibrate(500); playAlarm(); } else { document.getElementById('sentinelStatus').innerText = ''; } } catch (e) { } }
+        document.addEventListener('DOMContentLoaded', () => { loadAll(); setInterval(loadAll, 5000); setInterval(checkRadar, 5000); document.getElementById('sBox').addEventListener('input', (e) => { clearTimeout(tmr); if (e.target.value.length > 1) tmr = setTimeout(() => search(e.target.value), 500); else document.getElementById('sRes').style.display = 'none'; }); });
+        function loadAll() { mkt(); sum(); pos(); watch(); }
+        function closeM(id) { document.getElementById(id).style.display = 'none'; }
+        async function mkt() { try { let res = await fetch('/api/market/status'); let d = await res.json(); let elP = document.getElementById('idxPt'); elP.innerText = d.index_point.toFixed(2); elP.className = d.index_change >= 0 ? 'up' : 'down'; document.getElementById('idxChg').innerText = (d.index_change > 0 ? '+' : '') + d.index_change + '%'; let nVal = d.north_money; let nEl = document.getElementById('nVal'); nEl.innerText = (nVal > 0 ? '+' : '') + nVal.toFixed(2) + '亿'; nEl.className = nVal >= 0 ? 'north-val up' : 'north-val down'; document.getElementById('hotSec').innerText = d.hot_sector; } catch (e) { } }
+        async function sum() { try { let res = await fetch('/api/position/summary'); let d = await res.json(); document.getElementById('tVal').innerText = d.summary.val.toLocaleString('zh-CN', { minimumFractionDigits: 2 }); let el = document.getElementById('tPnl'); el.innerText = (d.summary.pnl > 0 ? '+' : '') + d.summary.pnl.toFixed(2); el.className = d.summary.pnl >= 0 ? 'up' : 'down'; document.getElementById('rPnl').innerText = d.total_realized_pnl ? d.total_realized_pnl.toFixed(2) : '0.00'; } catch (e) { } }
+        async function pos() { try { let res = await fetch('/api/position/list'); let d = await res.json(); let list = document.getElementById('posList'); if (!d.positions.length) { list.innerHTML = '<div style="text-align:center; padding:15px; color:#445">空仓</div>'; return; } list.innerHTML = d.positions.map(p => { let cls = p.float_pnl >= 0 ? 'up' : 'down'; return `<div class="card" style="border-left-color:${p.float_pnl >= 0 ? 'var(--red)' : 'var(--green)'}" onclick="openD('${p.ts_code}')"><div class="card-top"><div><div class="c-name">${p.name}</div><div class="c-code">${p.ts_code}</div></div><div style="text-align:right"><div class="c-price">${p.current_price.toFixed(2)}</div><div class="c-pct ${cls}">${p.float_pnl_ratio.toFixed(2)}%</div></div></div><div class="pos-info"><span>持仓 <b>${p.total_qty}</b></span><span>成本 <b>${p.cost_price.toFixed(2)}</b></span><span>盈亏 <b class="${cls}">${p.float_pnl.toFixed(0)}</b></span></div></div>` }).join(''); } catch (e) { } }
+        async function watch_old() { try { let res = await fetch('/api/watchlist'); let d = await res.json(); let list = document.getElementById('watchList'); if (!d.watchlist.length) { list.innerHTML = '<div style="text-align:center; padding:15px; color:#445">无自选</div>'; return; } list.innerHTML = d.watchlist.map(i => { let cls = i.change_pct >= 0 ? 'up' : 'down'; return `<div class="card" onclick="openD('${i.ts_code}')"><div class="card-top" style="margin:0"><div><div class="c-name">${i.name}</div><div class="c-code">${i.ts_code}</div></div><div style="text-align:right"><div class="c-price ${cls}">${i.current_price.toFixed(2)}</div><div class="c-pct ${cls}">${i.change_pct}%</div></div></div></div>` }).join(''); } catch (e) { } }
+        async function openD(code) {
+            document.getElementById('sRes').style.display = 'none'; document.getElementById('sBox').value = '';
+            try {
+                let res = await fetch(`/api/stock/${code}`); let d = await res.json(); cur = d.stock_info; cur.price = d.current_price;
+
+                // 头部数据填充
+                document.getElementById('dName').innerText = d.stock_info.name;
+                document.getElementById('dCode').innerText = d.stock_info.ts_code;
+                let elP = document.getElementById('dPrice'); elP.innerText = d.current_price.toFixed(2); elP.className = d.change_pct >= 0 ? 'up' : 'down';
+                document.getElementById('dPct').innerText = (d.change_pct > 0 ? '+' : '') + d.change_pct + '%'; document.getElementById('dPct').className = d.change_pct >= 0 ? 'up' : 'down';
+
+                // 信号
+                let bar = document.getElementById('dSigBar'); document.getElementById('dAction').innerText = d.action; document.getElementById('dScore').innerText = d.score || 0;
+                bar.className = 'sig-bar ' + (d.action_class === 'go' ? 'bg-go' : d.action_class === 'run' ? 'bg-run' : d.action_class === 'fake-drop' ? 'bg-fake' : 'bg-watch');
+
+                // 人话 (修复乱码)
+                let raw = d.explanation || '分析中...';
+                let fmt = raw.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b style="color:#fff">$1</b>');
+
+                // 注入战术条 (如果后端没有生成，前端兜底不显示，防止乱码)
+                if (raw.includes('t-mini-row')) {
+                    document.getElementById('dHuman').innerHTML = fmt;
+                } else {
+                    document.getElementById('dHuman').innerHTML = fmt;
+                }
+
+                if (d.risk_radar) document.getElementById('dRiskRadar').innerText = d.risk_radar;
+                document.getElementById('dMflow').innerText = d.main_inflow_text; document.getElementById('dAlert').innerText = d.thunder_alert ? '⚡触发' : '无';
+
+                if (d.cyq_data && d.cyq_data.valid) { document.getElementById('dWinRate').innerText = d.cyq_data.winner_rate + '%'; document.getElementById('dAvgCost').innerText = d.cyq_data.avg_cost.toFixed(2); } else { document.getElementById('dWinRate').innerText = '--%'; document.getElementById('dAvgCost').innerText = '--'; }
+
+                let lt = document.getElementById('dLhb'); lt.innerHTML = '';
+                if (d.dragon_tiger && d.dragon_tiger.on_list) { lt.innerHTML += '<span class="lhb-tag">🔥 龙虎榜</span>'; }
+                if (d.finance && d.finance.risk) { lt.innerHTML += ' <span class="lhb-tag" style="background:var(--red);">💣 ' + d.finance.msg + '</span>'; }
+
+                renderWatchBtn(code); document.getElementById('dMod').style.display = 'flex';
+
+                // 异步加载实时资金流数据
+                loadRealtimeFund(code);
+            } catch (e) { alert('加载中...'); }
+        }
+        async function autoPick() { document.getElementById('pickMod').style.display = 'flex'; document.getElementById('pickList').innerHTML = '<div style="color:#889; padding:20px;">🤖 正在执行三合一策略扫描...<br>1. 黄金启动<br>2. 主升浪<br>3. 超跌反转</div>'; try { let res = await fetch('/api/recommend'); let d = await res.json(); let list = document.getElementById('pickList'); if (d.success && d.stocks.length > 0) { list.innerHTML = d.stocks.map(s => { let cls = s.change >= 0 ? 'up' : 'down'; let tagHtml = ''; if (s.type === 'golden') tagHtml = '<span class="tag-golden">🌟 黄金启动</span>'; else if (s.type === 'main_wave') tagHtml = '<span class="tag-main">🚀 主升浪</span>'; else if (s.type === 'rebound') tagHtml = '<span class="tag-rebound">🔄 超跌反转</span>'; return `<div class="card" onclick="closeM('pickMod');openD('${s.ts_code}')" style="text-align:left;"><div class="card-top" style="margin:0"><div><div class="c-name">${s.name} ${tagHtml}</div><div class="c-code">${s.ts_code}</div></div><div style="text-align:right"><div class="c-price ${cls}">${s.price.toFixed(2)}</div><div class="c-pct" style="color:#889; font-size:10px; margin-top:4px;">${s.reason.split('：')[0]}</div></div></div></div>` }).join(''); } else { list.innerHTML = '<div style="padding:20px;">今日暂无符合策略的标的</div>'; } } catch (e) { document.getElementById('pickList').innerHTML = '扫描失败'; } }
+        function trade(dir) { document.getElementById('tTitle').innerText = dir === 'BUY' ? '买入' : '卖出'; document.getElementById('tCode').value = cur.ts_code; document.getElementById('tName').value = cur.name; document.getElementById('tDir').value = dir; document.getElementById('tPrice').value = cur.price; document.getElementById('tMod').style.display = 'flex'; }
+        async function subTrade() { let body = { ts_code: document.getElementById('tCode').value, name: document.getElementById('tName').value, price: document.getElementById('tPrice').value, qty: document.getElementById('tQty').value }; let url = document.getElementById('tDir').value === 'BUY' ? '/api/position/buy' : '/api/position/sell'; let dir = document.getElementById('tDir').value; try { let res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); let d = await res.json(); if (d.success) { closeM('tMod'); closeM('dMod'); pos(); sum(); if (dir === 'SELL' && d.pnl !== undefined) { let pnl = parseFloat(d.pnl); let msg = pnl >= 0 ? `🎉 止盈成功！\n盈利：+${pnl.toFixed(2)} 元` : `😭 止损完成。\n亏损：${pnl.toFixed(2)} 元`; alert(msg); } else { alert('交易成功！'); } } else { alert(d.error || '交易失败'); } } catch (e) { alert('网络错误'); } }
+        async function backtest() { if (!confirm('开始回测？')) return; let res = await fetch(`/api/backtest/${cur.ts_code}`, { method: 'POST' }); let d = await res.json(); alert(d.success ? `胜率: ${d.win_rate}%\n收益: ${d.max_return}%` : d.message); }
+        async function search(kw) { let res = await fetch('/api/search', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: kw }) }); let d = await res.json(); let box = document.getElementById('sRes'); if (d.stocks.length) { box.style.display = 'block'; box.innerHTML = d.stocks.map(s => `<div class="res-item" onclick="openD('${s.ts_code}')"><span style="color:#fff">${s.name}</span><span style="color:#667">${s.ts_code}</span></div>`).join(''); } else box.style.display = 'none'; }
+        async function addWatch() { await fetch('/api/watchlist/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ts_code: cur.ts_code, name: cur.name, price: cur.price }) }); alert('已加自选'); watch(); }
+        async function sync() {
+            if (!confirm('同步数据？')) return;
+            try {
+                const res = await fetch('/api/sync/stocks', { method: 'POST' });
+                let j = null;
+                try { j = await res.json(); } catch (e) { j = null; }
+                if (j && j.success) {
+                    alert('同步成功 ✅  共 ' + (j.count || 0) + ' 只');
+                } else {
+                    alert('同步失败 ❌  ' + (j && j.error ? j.error : '未知错误'));
+                }
+            } catch (e) {
+                alert('同步失败 ❌  ' + (e && e.message ? e.message : String(e)));
+            }
+        }
+
+        async function checkRadar() { try { let res = await fetch('/api/radar/scan'); let d = await res.json(); let ball = document.getElementById('rBall'); if (d.alerts && d.alerts.length > 0) { ball.style.display = 'flex'; let msg = document.getElementById('rMsg'); msg.innerHTML = d.alerts[0]; msg.style.display = 'block'; setTimeout(() => { msg.style.display = 'none'; }, 4000); } else { ball.style.display = 'none'; } } catch (e) { } }
+        async function openReview() { document.getElementById('revMod').style.display = 'flex'; try { let res = await fetch('/api/review/daily'); let d = await res.json(); document.getElementById('revContent').innerHTML = d.html; } catch (e) { document.getElementById('revContent').innerText = '生成失败'; } }
+        async function openTrades() {
+            document.getElementById('trdListMod').style.display = 'flex'; try {
+                let res = await fetch('/api/trade/list'); let d = await res.json(); let list = document.getElementById('trdListContent'); if (!d.trades.length) { list.innerHTML = '暂无交易记录'; return; }
+                let htmlStr = '<div class="trd-list-container">';
+                htmlStr += d.trades.map(t => { let isBuy = t.direction === 'BUY'; let tag = isBuy ? '<span class="tag-buy">买入</span>' : '<span class="tag-sell">卖出</span>'; let pnlHtml = ''; if (!isBuy) { let color = t.pnl >= 0 ? '#ff3b30' : '#00e676'; let sign = t.pnl >= 0 ? '+' : ''; pnlHtml = `<div class="trd-pnl" style="color:${color}">${sign}${t.pnl.toFixed(2)}</div>`; } else { pnlHtml = '<div style="font-size:12px; color:#445">持仓中</div>'; } return `<div class="trd-item"><div class="trd-left"><div class="trd-name">${t.name} ${tag}</div><div class="trd-time">${t.ts_code}<br>${t.trade_date}</div></div><div class="trd-right"><div class="trd-price">${t.price.toFixed(2)} x ${t.qty}</div>${pnlHtml}</div></div>`; }).join('');
+                htmlStr += '</div>';
+                list.innerHTML = htmlStr;
+            } catch (e) { document.getElementById('trdListContent').innerText = '加载失败'; }
+        }
+
+        // --- 智能自选按钮逻辑 ---
+        let g_watchSet = new Set(); // 全局自选缓存
+
+        // 修改 watch 函数，加载时更新缓存
+        async function watch() {
+            try {
+                let res = await fetch('/api/watchlist');
+                let d = await res.json();
+
+                // 更新全局 Set
+                g_watchSet.clear();
+                if (d.watchlist) {
+                    d.watchlist.forEach(item => g_watchSet.add(item.ts_code));
+                }
+
+                let list = document.getElementById('watchList');
+                if (!d.watchlist.length) { list.innerHTML = '<div style="text-align:center; padding:15px; color:#445">无自选</div>'; return; }
+
+                list.innerHTML = d.watchlist.map(i => {
+                    let cls = i.change_pct >= 0 ? 'up' : 'down';
+                    return `<div class="card" onclick="openD('${i.ts_code}')"><div class="card-top" style="margin:0"><div><div class="c-name">${i.name}</div><div class="c-code">${i.ts_code}</div></div><div style="text-align:right"><div class="c-price ${cls}">${i.current_price.toFixed(2)}</div><div class="c-pct ${cls}">${i.change_pct}%</div></div></div></div>`
+                }).join('');
+            } catch (e) { }
+        }
+
+        // 渲染按钮状态 (在 openD 中调用)
+        function renderWatchBtn(code) {
+            let btn = document.getElementById('btnWatch');
+            if (!btn) return;
+
+            if (g_watchSet.has(code)) {
+                // 已在自选中 -> 显示移除
+                btn.innerHTML = '- 移除自选';
+                btn.className = 'btn-remove';
+            } else {
+                // 不在自选中 -> 显示添加
+                btn.innerHTML = '+ 加入自选';
+                btn.className = 'btn-add-watch';
+            }
+        }
+
+        // 统一的切换函数
+        async function toggleWatch() {
+            if (!cur.ts_code) return;
+
+            if (g_watchSet.has(cur.ts_code)) {
+                // 执行移除
+                if (!confirm('确定从自选移除吗？')) return;
+                await fetch('/api/watchlist/remove', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ts_code: cur.ts_code })
+                });
+                g_watchSet.delete(cur.ts_code); // 更新缓存
+            } else {
+                // 执行添加
+                await fetch('/api/watchlist/add', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ts_code: cur.ts_code, name: cur.name, price: cur.price })
+                });
+                g_watchSet.add(cur.ts_code); // 更新缓存
+                alert('已加入自选');
+            }
+
+            // 刷新按钮状态和列表
+            renderWatchBtn(cur.ts_code);
+            watch();
+        }
+
+        // ====== 实时资金流加载 ======
+        async function loadRealtimeFund(code) {
+            const box = document.getElementById('realtimeFundBox');
+            if (!box) return;
+
+            // 先隐藏，等数据加载完再显示
+            box.style.display = 'none';
+
+            try {
+                const res = await fetch(`/api/realtime/fund/${code}`);
+                const d = await res.json();
+
+                if (d.success && d.data && d.data.valid) {
+                    const data = d.data;
+
+                    // 主力净流入
+                    const mainNetEl = document.getElementById('rfMainNet');
+                    const mainNet = data.main_net || 0;
+                    mainNetEl.innerText = data.main_net_text || (mainNet > 0 ? '+' : '') + mainNet.toFixed(0) + '万';
+                    mainNetEl.className = 'rf-value ' + (mainNet >= 0 ? 'up' : 'down');
+
+                    // 买卖力量比
+                    const powerEl = document.getElementById('rfPowerRatio');
+                    const power = data.power_ratio || 1;
+                    powerEl.innerText = power.toFixed(2);
+                    powerEl.className = 'rf-value ' + (power > 1 ? 'up' : power < 1 ? 'down' : '');
+
+                    // 资金趋势
+                    const trendEl = document.getElementById('rfTrend');
+                    trendEl.innerText = data.fund_trend || '--';
+                    let trendColor = '';
+                    if (data.fund_trend && data.fund_trend.includes('流入')) trendColor = 'up';
+                    else if (data.fund_trend && data.fund_trend.includes('流出')) trendColor = 'down';
+                    trendEl.className = 'rf-value ' + trendColor;
+
+                    // 风险信号
+                    const signalEl = document.getElementById('rfSignal');
+                    signalEl.innerText = data.risk_signal || '✅ 资金正常';
+
+                    // 设置信号样式
+                    signalEl.className = 'rf-signal';
+                    if (data.risk_signal) {
+                        if (data.risk_signal.includes('抢筹') || data.risk_signal.includes('洗盘')) {
+                            signalEl.classList.add('rf-signal-in');
+                        } else if (data.risk_signal.includes('出货') || data.risk_signal.includes('流出')) {
+                            signalEl.classList.add('rf-signal-out');
+                        } else {
+                            signalEl.classList.add('rf-signal-neutral');
+                        }
+                    } else {
+                        signalEl.classList.add('rf-signal-neutral');
+                    }
+
+                    // 建议
+                    document.getElementById('rfSuggestion').innerText = data.suggestion ? '💡 ' + data.suggestion : '';
+
+                    // 更新时间
+                    document.getElementById('rfUpdateTime').innerText = data.update_time ? '⏱️ ' + data.update_time : '';
+
+                    // 显示区域
+                    box.style.display = 'block';
+                } else {
+                    // API返回失败或无数据，隐藏区域
+                    box.style.display = 'none';
+                }
+            } catch (e) {
+                console.log('实时资金流加载失败:', e);
+                box.style.display = 'none';
+            }
+        }
+
+    </script>
+</body>
+
+</html>

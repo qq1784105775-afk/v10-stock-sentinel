@@ -1,0 +1,11 @@
+# V10 Ultra Pro 依赖
+fastapi==0.99.1
+uvicorn[standard]
+pandas
+numpy
+tushare
+jinja2
+aiofiles
+requests
+python-multipart
+gunicorn
